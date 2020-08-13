@@ -18,7 +18,8 @@ List of column names to use. If the file contains a header row,
 then you should explicitly pass header=0 to override the column names. 
 Duplicates in this list are not allowed
 """
-pima = pd.read_csv("/home/becode/LearnAI/scikit/datasets_228_482_diabetes.csv", header=0, names = col_names)
+pima = pd.read_csv("/home/becode/LearnAI/scikit/scikit/Supervised Learning/datasets_228_482_diabetes.csv",
+                   header=0, names = col_names)
 
 #print(pima.describe())
 print(pima.head(10))
@@ -47,10 +48,11 @@ The dimension of this matrix is 2*2 because this model is binary classification.
 You have two classes 0 and 1. Diagonal values represent accurate predictions, 
 while non-diagonal elements are inaccurate predictions.
 
-[[117  13]  117 : TN true negative , 13 : FP false positive  => so ACCURACY = (TP+TN)/(TP+TN+FP+FN) = #correct/total
- [ 24  38]]  24 : FN false negative , 38 : TP true positive  => PRECISION =  TP/(TP+FP) = 38/(38+13)= 74.5%
-=> so ACCURACY is about 80% cause I miss 24 of 117 + 24
-=> PRECISION is about 74% cause of those 117 positive, 13 are false positive
+[[117  13]  117 : TN true negative , 13 : FP false positive
+ [ 24  38]]  24 : FN false negative , 38 : TP true positive
+ --------------------------------------------------------
+=> so ACCURACY = (TP+TN)/(TP+TN+FP+FN) = #correct/total
+=> PRECISION =  TP/(TP+FP) = 38/(38+13)= 74.5%
 => RECALL is about 61% =38/(38+24)=TP/(TP+FN) cause I find 38 of 62=38+24 people with actual diabetes
 """
 print(cnf_matrix)
