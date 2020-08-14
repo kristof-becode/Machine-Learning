@@ -69,7 +69,7 @@ In other words, you can say a low value of gamma considers only nearby points in
 while the a value of gamma considers all the data points in the calculation of the separation line.
 """
 # Let's gro through the hyperparameters referred to above and vary them
-hyperparam={'kernel':['linear', 'poly', 'RBF'], 'gamma' :['scale', 'auto']}
+hyperparam={'kernel':['linear', 'poly', 'rbf'], 'gamma' :['scale', 'auto']}
 for kernel in hyperparam['kernel']:
     for gamma in hyperparam['gamma']:
         clf = svm.SVC(kernel=kernel,gamma=gamma )
