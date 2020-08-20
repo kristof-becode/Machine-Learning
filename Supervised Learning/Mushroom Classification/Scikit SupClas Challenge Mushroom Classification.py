@@ -201,7 +201,8 @@ print(f"Naive Bayes; accuracy: {metrics.accuracy_score(y_test, y_pred)} |"
 ONE HOT ENCODING THE DATA
     Ideal for discrete, nominal categorical data
 """
-
+print("\nCLF COMPARISION - ONE HOT ENCODING FOR ALL FEATURES")
+print("------------------------------------------------------")
 mush= pd.read_csv("/home/becode/LearnAI/scikit/scikit/Supervised Learning/datasets_478_974_mushrooms.csv")
 
 # BAR PLOTS !!!!!!!!!!
@@ -358,6 +359,103 @@ gnb.fit(X_train, y_train)
 y_pred = gnb.predict(X_test)
 print(f"Naive Bayes; accuracy: {metrics.accuracy_score(y_test, y_pred)} |"
       f" precision: {metrics.precision_score(y_test, y_pred)} | recall: {metrics.recall_score(y_test, y_pred)}")
+
+
+"""
+    HERE I PERFORM CLASSIFICATION ON A SELECTION OF FEATURES
+    I use OneHotEncoding on 9 features that returned highest Pearson's coefficient (see above)
+     'bruises','ring-type','gill-size','cap-surface','gill-color',
+    'stalk-root','population', 'habitat', 'spore-print-color'
+"""
+# TEST CLASSIFIERS FOR SELECTION OF FEATURES:
+
+print("\nCLF COMPARISION - ONE HOT ENCODING FOR 9 FEATURES")
+print("------------------------------------------------------")
+
+X = mush[['bruises','ring-type','gill-size','cap-surface','gill-color','stalk-root','population', 'habitat', 'spore-print-color']]
+OH = preprocessing.OneHotEncoder()
+lab_enc = preprocessing.LabelEncoder()
+mush_OH_enc = OH.fit_transform(X)
+class_lab_enc = lab_enc.fit_transform(mush['class'])
+
+# TRY KNN for different K-VALUES AND NORMALIZED DATASET
+print("\n-> CLF: KNN\n")
+X = mush_OH_enc
+X_normalized = preprocessing.normalize(X, norm='l2')
+y = class_lab_enc
+X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.3,random_state=123) # 70% training and 30% test
+k_list = [1,3,5,9]
+for k in k_list:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    print(f"KNN for K={k} with normalization; accuracy : {metrics.accuracy_score(y_test, y_pred)}| "
+          f"precision : {metrics.precision_score(y_test, y_pred)}| recall : {metrics.recall_score(y_test, y_pred)} ")
+
+# TRY LOGISTIC REGRESSION
+print("\n-> CLF: LOGISTIC REGRESSION\n")
+X = mush_OH_enc.toarray()
+stan = preprocessing.StandardScaler()
+X_standardized = stan.fit_transform(X)
+#X_standardized = preprocessing.StandardScaler(X)
+y = class_lab_enc
+X_train, X_test, y_train, y_test = train_test_split(X_standardized, y, test_size=0.3,random_state=123) # 70% training and 30% test
+logreg = LogisticRegression()
+logreg.fit(X_train,y_train)
+y_pred = logreg.predict(X_test)
+cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+print(cnf_matrix)
+print(f"\nLogistic regression; accuracy: {metrics.accuracy_score(y_test, y_pred)} | "
+      f"precision : {metrics.precision_score(y_test, y_pred)}| recall : {metrics.recall_score(y_test, y_pred)}")
+
+# TRY DECISION TREE , NO SCALING NEEDED
+print("\n-> CLF: DECISION TREE\n")
+X = mush_OH_enc
+y = class_lab_enc
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=123) # 70% training and 30% test
+clf = DecisionTreeClassifier()
+clf.fit(X_train,y_train)
+y_pred = clf.predict(X_test)
+
+criteria={'criterion':['gini', 'entropy'],'split' :['best', 'random'], 'depth':[None, 1,2,3,4,5]}
+for criterion in criteria['criterion']:
+    for splitter in criteria['split']:
+        for depth in criteria['depth']:
+            clf = DecisionTreeClassifier(criterion=criterion, splitter=splitter, max_depth=depth)
+            clf = clf.fit(X_train, y_train)
+            y_pred = clf.predict(X_test)
+            print(f"Dec Tree for criterion {criterion}, splitter {splitter} and max_depth {depth}; "
+                  f"accuracy: {metrics.accuracy_score(y_test, y_pred)} |"
+                  f" precision : {metrics.precision_score(y_test, y_pred)} |"
+                  f" recall : {metrics.recall_score(y_test, y_pred)}")
+
+# TRY SVM # NORMALIZATION GOOD IDEA
+print("\n-> CLF: SVM\n")
+X = mush_OH_enc.toarray()
+X_normalized = preprocessing.normalize(X, norm='l2')
+y = class_lab_enc
+X_train, X_test, y_train, y_test = train_test_split(X_normalized, y, test_size=0.3, random_state=123) # 70% training and 30% test
+
+hyperparam={'kernel':['linear', 'poly', 'rbf'], 'gamma' :['scale', 'auto']}
+for kernel in hyperparam['kernel']:
+    for gamma in hyperparam['gamma']:
+        clf = svm.SVC(kernel=kernel,gamma=gamma )
+        clf.fit(X_train, y_train)
+        y_pred = clf.predict(X_test)
+        print(f"SVM for kernel {kernel} and gamma {gamma}; accuracy: {metrics.accuracy_score(y_test, y_pred)} | "
+              f"precision: {metrics.precision_score(y_test, y_pred)} | recall: {metrics.recall_score(y_test, y_pred)}")
+
+# TRY NAIVE BAYES
+print("\n-> CLF: NAIVE BAYES\n")
+X = mush_OH_enc.toarray()
+y = class_lab_enc
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,random_state=123) # 70% training and 30% test
+gnb = GaussianNB()
+gnb.fit(X_train, y_train)
+y_pred = gnb.predict(X_test)
+print(f"Naive Bayes; accuracy: {metrics.accuracy_score(y_test, y_pred)} |"
+      f" precision: {metrics.precision_score(y_test, y_pred)} | recall: {metrics.recall_score(y_test, y_pred)}")
+
 
 """
 TRYING TO COMBINE ALL CLF IN ONE FUNCTION - NOT FINISHED
