@@ -44,11 +44,18 @@ print(f"\nshape dataframe: {titan.shape}")
 print("\nChecking for NA values:\n",titan.isna().sum())
 titan = titan.drop(columns=['PassengerId','Name','Parch','Cabin','Ticket'])
 #avg_age_male = titan.age[titan['sex'] =='Male'].mean
-for_age_mean = titan['Age'][titan['Age'].notna()]
-print(for_age_mean)
+
+
 for_age_mean = titan.Age.notna()
 print(for_age_mean)
-print(titan.Age[titan['Sex'] == 'male'])
+mean_male_age = titan.Age[titan['Sex'] == 'male'].mean()
+mean_fem_age = titan.Age[titan['Sex'] == 'female'].mean()
+print(titan.Age[titan['Sex'] == 'male'].mean())
+print(titan.Age[titan['Sex'] == 'female'].mean())
+#titan['Age'][titan.Sex = 'male'] = titan['Age'].isna().apply(lambda x : mean_male_age if titan['Sex'] == 'male' else (mean_fem_age if titan['Sex'] == 'female' else x ))
+titan['Age'][titan.Sex == 'male'] = titan['Age'][titan.Sex == 'male'].apply(lambda x : mean_male_age if titan['Age'].isna() else x)
+print(titan['Age'])
+#titan.Age[titan.Age]
 #for_age_mean = titan.Age[titan.Age.notna() == True & titan['Sex'] == 'male']
 print(for_age_mean)
 #print(titan.Age[titan['Sex'] =='Male' & titan.Age.isna() is False].mean())
