@@ -174,6 +174,11 @@ print(prct_ships_type_2015)
 prct_ships_type_2019 = round((ships_type_2019 / ships_type_2019.sum())*100,4)
 print("->Scheepstype for 2019 in %: ")
 print(prct_ships_type_2019)
+##
+#plt.bar(elements, edible, bottom=pois, color='blue', edgecolor='white',label='edible')
+plt.bar(prct_ships_type_2019.iloc[:,0], prct_ships_type_2019.iloc[:,1])
+plt.show()
+##
 prct_ships_class_2015 = round((ships_class_2015 / ships_class_2015.sum())*100,4)
 print("->Max lengte for 2015 in %: ")
 print(prct_ships_class_2015)
@@ -382,7 +387,7 @@ un_bestemming_2019 = len(port2019_no_productcode['Haven bestemming'].unique())
 print("->Haven herkomst 2019, 10 most frequent:")
 print(herkomst_2019.head(10))
 print("->Haven bestemming 2019, 10 most frequent:")
-print(bestemming_2019.head(10))
+print(bestemming_2019[0:10])#.head(10))
 print("2019 : number aankomst ports :", un_herkomst_2019, " number bestemming ports :", un_bestemming_2019)
 
 
