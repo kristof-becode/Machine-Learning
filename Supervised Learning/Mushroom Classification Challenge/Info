@@ -1,0 +1,14 @@
+In this Mushroom Classification project I performed binary classification to label mushrooms as being edible or poisonous, starting from a wide range of mushroom atributes.
+
+The UCI Dataset for Mushroom Classification is retrieved from https://www.kaggle.com/uciml/mushroom-classification/data
+For correlation and classification purposes the Python Scikit Learn package is used.
+
+The dataset consists of attributes that are categorical, discrete and nominal. Therefore the possible features are ideally One Hot Encoded before feeding them to different classifiers. 
+Correlation with the target label is analysed with Pearson's coefficient and bar plots. 
+
+For the classification I tried following classifier algorithms: KNN, Logistic Regression, SVM, Decision Tree and Naive Bayes.
+
+I tried classification with using all columns as features and for a selection of nine features with highest Pearson score.
+
+All classifiers gave very high results of accuracy, precision and recall. Best results are obtained with KNN and Logistic Regression. Decision Tree and SVM gave very good results depending on parameters. The Naive Bayes classifier gave "worst" results.
+
