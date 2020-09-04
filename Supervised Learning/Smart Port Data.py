@@ -119,6 +119,7 @@ print(len(port[port['Aanvang jaar'] == 2015]['FD nummer ANO'].unique()))
 print("Number of individual/different ships in 2019")
 print(len(port[port['Aanvang jaar'] == 2019]['FD nummer ANO'].unique()))
 
+
 # doorvaart vs vertrek/aankomst
 """
 dvrt = port2015['Route categorie'][port2015['Route categorie' == 'Doorvaart']].count()
@@ -165,9 +166,41 @@ print("->Scheepstype for 2019 :")
 print(ships_type_2019.sort_values(ascending=False))
 print("->Max lengte for 2019 :")
 print(ships_class_2019.sort_values(ascending=False))
+ships_class_2019.sort_values(ascending=False)
 #print("Check upper sum of ships matches passages 2015, OK," , ships_type_2015.sum())
 #print("Check upper sum of ships matches passages 2019, OK," , ships_type_2019.sum())
+port_no_productcode = port.drop('Productcode',axis=1)
+port_no_productcode = port_no_productcode.drop_duplicates(keep="first")
+ships_type = port_no_productcode.groupby('Aanvang jaar')['Scheepstype'].value_counts()
+sns.barplot(x=port_no_productcode['Scheepstype'].unique(), y=port_no_productcode['Scheepstype'].value_counts(),hue=port_no_productcode['Aanvang jaar'].unique())
+#ships_type.plot.bar()
+plt.show()
+ships_class = port_no_productcode['Max lengte'].value_counts()
+#ships_class.plot.bar()
+#plt.show()
 
+"""
+g = sns.catplot(x=port_no_productcode['Scheepstype'].unique(), y=port_no_productcode['Scheepstype'].value_counts(), hue="Aanvang jaar", data=port_no_productcode.groupby('Scheepstype')['Scheepstype','Aanvang jaar'],
+                height=6, kind="bar", palette="muted")
+g.despine(left=True)
+g.set_ylabels("survival probability")
+plt.show()
+
+x= [2015,2019]
+y= port_no_productcode.groupby(['Aanvang jaar'])['Scheepstype'].value_counts()
+
+this = port_no_productcode.groupby(['Aanvang jaar','Scheepstype'])['Scheepstype'].value_counts()
+
+#fig, ax = plt.subplots()
+#sns.barplot(data=this,x='Aanvang jaar',y= 'Scheepstype',hue='Scheepstype',ax=ax)
+#sns.barplot(x,y,ax=ax)
+sns.barplot(x,y,hue=port_no_productcode.groupby(['Aanvang jaar'])['Scheepstype'])
+plt.show()
+"""
+print("ABANAS888888888888888888888888888888888888888888888888888888888888888888")
+print(port_no_productcode.groupby(['Aanvang jaar'])['Scheepstype'].value_counts())
+print(port_no_productcode.groupby(['Aanvang jaar'])['Scheepstype'].count())
+print(port_no_productcode.groupby(['Aanvang jaar','Route categorie'])['Scheepstype'].value_counts())
 prct_ships_type_2015 = round((ships_type_2015 / ships_type_2015.sum())*100,4)
 print("->Scheepstype for 2015 in %: ")
 print(prct_ships_type_2015)
@@ -176,8 +209,8 @@ print("->Scheepstype for 2019 in %: ")
 print(prct_ships_type_2019)
 ##
 #plt.bar(elements, edible, bottom=pois, color='blue', edgecolor='white',label='edible')
-plt.bar(prct_ships_type_2019.iloc[:,0], prct_ships_type_2019.iloc[:,1])
-plt.show()
+#plt.bar(prct_ships_type_2019.iloc[:,0], prct_ships_type_2019.iloc[:,1])
+#plt.show()
 ##
 prct_ships_class_2015 = round((ships_class_2015 / ships_class_2015.sum())*100,4)
 print("->Max lengte for 2015 in %: ")
